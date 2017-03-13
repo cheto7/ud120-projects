@@ -46,17 +46,24 @@ data_dict.pop("TOTAL", 0)
 ### Feature scaling - sneak preview
 # min and max values - not NaN
 import math
-min = None
-max = None
-for ele in data_dict:
-	val = float(data_dict[ele]['exercised_stock_options'])
-	if not math.isnan(val) and (max == None or max < val):
-		max = val
-	
-	if not math.isnan(val) and (min == None or min > val):
-		min = val
+def get_min_max(feature):
+	min = None
+	max = None
+	for ele in data_dict:
+		val = float(data_dict[ele][feature])
+		if not math.isnan(val) and (max == None or max < val):
+			max = val
 		
-print "max: {} and min: {}".format( max, min)
+		if not math.isnan(val) and (min == None or min > val):
+			min = val
+	
+	return (max, min)
+	
+max, min = get_min_max('exercised_stock_options')
+print "exercised_stock_options feature max: {} and min: {}".format( max, min)
+
+max, min = get_min_max('salary')
+print "salary feature max: {} and min: {}".format( max, min)
 
 
 ### the input features we want to use 
@@ -65,6 +72,7 @@ feature_1 = "salary"
 feature_2 = "exercised_stock_options"
 feature_3 = "total_payments"
 poi  = "poi"
+#features_list = [poi, feature_1, feature_2]
 features_list = [poi, feature_1, feature_2, feature_3]
 data = featureFormat(data_dict, features_list )
 poi, finance_features = targetFeatureSplit( data )
